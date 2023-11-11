@@ -3,5 +3,8 @@
 		"iconv-lite": "^0.6.3",
 		"node-osc": "^9.0.1",
 		"socket.io-client": "^4.7.2"
+	},
+	"devDependencies": {
+		"prettier": "^3.0.3"
 	}
 }
