@@ -14,5 +14,5 @@
 1. このリポジトリをクローンします。
 2. [PC Status Client - Rustのreleasesページ](https://github.com/kazukazu123123/pcsc-rs/releases)から最新の**MSVCリリース**をダウンロードします。 (`x86_64-pc-windows-msvc`)
 3. ダウンロードしたexeを適当な場所に保存して起動します。
-4. `pnpm i` を実行後、 `node .` で起動します。
+4. コマンドプロンプトを開き、 `pnpm i` を実行後、 `start-vrc-osc.bat` を実行します。
 5. VRChatのチャットボックスに自動的にPC情報が送信されます。
