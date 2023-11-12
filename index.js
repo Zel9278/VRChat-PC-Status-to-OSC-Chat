@@ -46,7 +46,7 @@ getPerf()
 setInterval(() => getPerf(), 2000)
 
 server.on("listening", () => {
-    console.log("OSC Server is listening.")
+    console.log("[LOG] OSC Server is listening.")
     rl.on("line", (line) => {
         if (line === "") return (inputText = CHAT_TEXT)
         inputText = line
@@ -55,6 +55,10 @@ server.on("listening", () => {
 
 server.on("message", (msg) => {
     //console.log(`Message: ${msg}`);
+})
+
+sio.on("connect", () => {
+    console.log("[LOG] Socket.io Client Connected")
 })
 
 sio.on("status", (msg) => {
@@ -99,9 +103,9 @@ setInterval(() => {
     const gpu = enable_gpu
         ? ` | GPU: ${statusData.gpu}% | VMEM: ${statusData.vmem}%(${statusData.vmemData[0]}/${statusData.vmemData[1]})`
         : ""
-    send(
-        `CPU: ${statusData.cpu}% | RAM: ${statusData.ram}%(${statusData.ramData[0]} / ${statusData.ramData[1]})${gpu} | DiskIO: ${statusData.disk.idleTime}%(r: ${statusData.disk.read} / w: ${statusData.disk.write}) | ${text}`,
-    )
+    const res = `CPU: ${statusData.cpu}% | RAM: ${statusData.ram}%(${statusData.ramData[0]} / ${statusData.ramData[1]})${gpu} | DiskIO: ${statusData.disk.idleTime}%(r: ${statusData.disk.read} / w: ${statusData.disk.write}) | ${text}`
+    send(res)
+    console.log("[LOG]", res)
 }, 3000)
 
 function send(text) {
