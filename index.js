@@ -101,7 +101,7 @@ sio.on("status", (msg) => {
 setInterval(() => {
     const text = `${"["}${inputText}${"]"}`
     const gpu = enable_gpu
-        ? ` | GPU: ${statusData.gpu}% | VMEM: ${statusData.vmem}%(${statusData.vmemData[0]}/${statusData.vmemData[1]})`
+        ? ` | GPU: ${statusData.gpu}% | VRAM: ${statusData.vmem}%(${statusData.vmemData[0]}/${statusData.vmemData[1]})`
         : ""
     const res = `CPU: ${statusData.cpu}% | RAM: ${statusData.ram}%(${statusData.ramData[0]} / ${statusData.ramData[1]})${gpu} | DiskIO: ${statusData.disk.idleTime}%(r: ${statusData.disk.read} / w: ${statusData.disk.write}) | ${text}`
     send(res)
