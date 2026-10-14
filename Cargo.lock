@@ -223,8 +223,8 @@ dependencies = [
 
 [[package]]
 name = "pcsc-rs"
-version = "2.11.0"
-source = "git+https://github.com/Zel9278/pcsc-rs?branch=feat%2Flibrary-monitor#c944c2410f38fa1ec1c4bcbe8fbb25beba7cc341"
+version = "2.12.0"
+source = "git+https://github.com/Zel9278/pcsc-rs?tag=v2.12.0#b057ca75ac1dc3a238ad62476b5e0094586c3533"
 dependencies = [
  "arc-swap",
  "cfg-if",
