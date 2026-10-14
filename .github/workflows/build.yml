@@ -1,0 +1,57 @@
+name: build
+on:
+  push:
+    branches: ["main"]
+    tags: ["v*"]
+  pull_request:
+
+jobs:
+  build:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - target: x86_64-pc-windows-msvc
+            os: windows-2022
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-24.04
+    runs-on: ${{ matrix.platform.os }}
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_REPO: ${{ github.repository }}
+    defaults:
+      run:
+        shell: bash -xe {0}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: Swatinem/rust-cache@9d47c6ad4b02e050fd481d890b2ea34778fd09d6 # v2.7.8
+        with:
+          key: ${{ matrix.platform.target }}
+      - run: cargo fmt --check
+      - run: cargo clippy --locked --all-targets --target ${{ matrix.platform.target }} -- -D warnings
+      - run: cargo test --locked --target ${{ matrix.platform.target }}
+      - run: cargo build --locked --release --target ${{ matrix.platform.target }}
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: vrc-pc-status-${{ matrix.platform.target }}
+          path: |
+            target/${{ matrix.platform.target }}/release/vrc-pc-status
+            target/${{ matrix.platform.target }}/release/vrc-pc-status.exe
+          if-no-files-found: error
+      # A tag (v2.0.0) publishes a release with the executables
+      - name: Upload to the release
+        if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+        working-directory: target/${{ matrix.platform.target }}/release/
+        run: |
+          tag=${GITHUB_REF#refs/tags/}
+          gh release view "$tag" >/dev/null 2>&1 || gh release create "$tag" --title "$tag" --generate-notes || true
+          if [ -e vrc-pc-status.exe ]; then
+            file="vrc-pc-status-$tag-${{ matrix.platform.target }}.exe"
+            mv vrc-pc-status.exe "$file"
+          else
+            file="vrc-pc-status-$tag-${{ matrix.platform.target }}"
+            mv vrc-pc-status "$file"
+          fi
+          gh release upload "$tag" "$file" --clobber
