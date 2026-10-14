@@ -46,7 +46,8 @@ jobs:
         working-directory: target/${{ matrix.platform.target }}/release/
         run: |
           tag=${GITHUB_REF#refs/tags/}
-          gh release view "$tag" >/dev/null 2>&1 || gh release create "$tag" --title "$tag" --generate-notes || true
+          # Notes from the tag's message (git tag -a), not GitHub's generated list of names
+          gh release view "$tag" >/dev/null 2>&1 || gh release create "$tag" --title "$tag" --notes-from-tag || true
           if [ -e vrc-pc-status.exe ]; then
             file="vrc-pc-status-$tag-${{ matrix.platform.target }}.exe"
             mv vrc-pc-status.exe "$file"
